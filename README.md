@@ -87,4 +87,4 @@ Add-Content $PROFILE '. $HOME\.config\powershell\user_profile.ps1'
 
 #### Install Node, pnpm or deno or whatever.
 
-13. Copy and paste latest user_profile.ps1 and starship config. Should I make it a git repository to pull at this point?
+You're on your own from this point.
