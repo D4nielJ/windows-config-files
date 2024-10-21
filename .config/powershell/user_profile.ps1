@@ -71,14 +71,11 @@ function touch {
     if (Test-Path $Path) {
         # Update the timestamp
         (Get-Item $Path).LastWriteTime = Get-Date
-    } else {
+    }
+    else {
         # Create a new empty file
         New-Item -Path $Path -ItemType File
     }
-}
-
-function config {
-    git --git-dir=$env:USERPROFILE\.dotfiles --work-tree=$env:USERPROFILE @args
 }
 
 # Random. DON'T READ.
