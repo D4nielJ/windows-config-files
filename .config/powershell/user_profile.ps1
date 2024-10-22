@@ -18,14 +18,11 @@ Set-PSReadLineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+f' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Git alias functions
-$gitFunctions = @(
-    'fetch', 'clone', 'pull', 'push', 'add'
-)
-
-foreach ($func in $gitFunctions) {
-    Set-Alias $func "git $func"
-}
-
+function fetch { & git fetch $args }
+function clone { & git clone $args }
+function pull { & git pull $args }
+function push { & git push $args }
+function add { & git add $args }
 function gco { & git checkout $args }
 function gcob { & git checkout -b $args }
 function stat { & git status $args }
