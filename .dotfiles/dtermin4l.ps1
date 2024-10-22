@@ -5,6 +5,24 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+$IS_LOGS = $true
+
+function installPackage {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$script,
+        [Parameter(Mandatory = $true)]
+        [string]$packageName
+    )
+    Write-Host "Installing $packageName..." -ForegroundColor Green
+    if ($IS_LOGS) {
+        Invoke-Expression $script
+    }
+    else {
+        Invoke-Expression $script > $null
+    }
+}
+
 function confirmCommandInstallation {
     param(
         [Parameter(Mandatory = $true)]
@@ -24,35 +42,25 @@ function confirmCommandInstallation {
 # Set execution policy to bypass (for this process only)
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
-# Install Chocolatey
-Write-Host "Installing Chocolatey..." -ForegroundColor Green
-# Suppress standard output, but keep error messages visible
+# Chocolatey
 $chocoScript = "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
-Invoke-Expression $chocoScript > $null
-
-# Confirm Chocolatey installation
+installPackage -script $chocoScript -packageName "Chocolatey"
 confirmCommandInstallation -command "choco" -packageName "Chocolatey"
 
-#Install starship
-Write-Host "Installing starship..." -ForegroundColor Green
+# Starship
 $starshipScript = "choco install starship"
-Invoke-Expression $starshipScript > $null
+installPackage -script $starshipScript -packageName "starship"
+Write-Host "Starship installed!" -ForegroundColor Green
 
-# Install scoop
-Write-Host "Installing Scoop..." -ForegroundColor Green
+# Scoop
 $scoopScript = "Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
-Invoke-Expression $scoopScript > $null
-
-# Confirm Scoop installation
+installPackage -script $scoopScript -packageName "Scoop"
 confirmCommandInstallation -command "scoop" -packageName "Scoop"
 
-# Install scoop packages
+# Scoop Packages: curl, jq, neovim, winfetch
 $packages = @("curl", "jq", "neovim", "winfetch")
 foreach ($package in $packages) {
-    Write-Host "Installing $package..." -ForegroundColor Green
     $scoopInstallPackage = "scoop install $package"
-    Invoke-Expression $scoopInstallPackage > $null
-
-    # Confirm package installation
+    installPackage -script $scoopInstallPackage -packageName $package
     confirmCommandInstallation -command $package -packageName $package
 }
