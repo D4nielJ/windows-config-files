@@ -30,7 +30,8 @@ function gco { & git checkout $args }
 function gcob { & git checkout -b $args }
 function stat { & git status $args }
 function gcm { & git commit $args }
-function log { & git lg }
+function log { & git log }
+function lg { & git log --pretty=format:"%C(auto)%h %C(yellow)%d %C(reset)%s %C(bold blue)<%an>%C(reset)" --graph }
 function gam {
     & git add .; & git commit -m $args
 }
