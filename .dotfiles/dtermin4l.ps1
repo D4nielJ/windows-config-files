@@ -35,7 +35,6 @@ function confirmCommandInstallation {
     }
     else {
         Write-Host "Failed to install $packageName." -ForegroundColor Red
-        exit
     }
 }
 
