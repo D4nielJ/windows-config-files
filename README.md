@@ -1,12 +1,9 @@
-# How to set up Windows Terminal
-
-#### Install Powershell from Microsoft Store
-
 ## **DTERMIN4L**
 
-Use this script to install all the configurations on this repo. Better used when is a fresh windows terminal that you plan to work on.
+This script automates the installation of essential tools, customizes your Git configuration, and sets up dotfiles management on a new machine or after formatting. It installs fonts, Git, Scoop, and several useful packages and PowerShell modules. It also updates your PowerShell profile to include environment variables and dotfiles commands.
 
-**This could potentially delete files from your machine**
+**This could potentially and will delete files from your machine**
+Make sure you have a back up of your terminal settings.json
 
 ```powershell
 # Install latest powershell update
@@ -23,6 +20,12 @@ Remove-Item -Path $tempScriptPath -Force
 ```
 
 ## **Manual Configuration**
+
+#### Install latest update of Powershell:
+
+```powershell
+winget install --id Microsoft.PowerShell --source winget
+```
 
 #### Install and set up: SpaceMono Nerd Font: https://www.nerdfonts.com/font-downloads
 
@@ -125,3 +128,7 @@ Add-Content $PROFILE '. $HOME\.config\powershell\user_profile.ps1'
 #### Install Node, pnpm or deno or whatever.
 
 You're on your own from this point.
+
+#### License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
