@@ -67,14 +67,14 @@ Install-Module posh-git -Scope CurrentUser -Force
 ```
 # Clone repo as bare
 git clone --bare https://github.com/D4nielJ/windows-config-files.git $HOME/.dotfiles
-Add-Content $PROFILE 'function config { git --git-dir=$HOME\.dotfiles --work-tree=$HOME @args }'
+Add-Content $PROFILE 'function dotfiles { git --git-dir=$HOME\.dotfiles --work-tree=$HOME @args }'
 
 # Load the updated profile to the current session
 . $PROFILE
 
 # Set up Git to ignore untracked files in your home directory
-config checkout
-config config --local status.showUntrackedFiles no
+dotfiles checkout
+dotfiles config --local status.showUntrackedFiles no
 
 # Load powershell config to $PROFILE
 Add-Content $PROFILE '. $HOME\.config\powershell\user_profile.ps1'
