@@ -6,6 +6,7 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 $IS_LOGS = $true
+wsl touch ~/logs.txt
 
 function installPackage {
     param(
@@ -16,7 +17,7 @@ function installPackage {
     )
     Write-Host "Installing $packageName..." -ForegroundColor Green
     if ($IS_LOGS) {
-        Invoke-Expression $script
+        Invoke-Expression $script | Out-File -FilePath "~\logs.txt"
     }
     else {
         Invoke-Expression $script > $null
