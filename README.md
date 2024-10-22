@@ -45,9 +45,22 @@ scoop install curl jq neovim winfetch
 #### Git for Windows:
 
 ```
+# Install git:
 winget install -e --id Git.Git
-git config --global user.email "d4niel.djm@gmail.com"
-git config --global user.name "Daniel J"
+
+# Add .gitconfig customization
+@"
+
+[user]
+    email = d4niel.djm@gmail.com
+    name = Daniel J
+[init]
+    defaultBranch = main
+[alias]
+    lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
+    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+    lg = lg1
+"@ | Add-Content -Path $HOME\.gitconfig
 ```
 
 #### Install modules posh-sshell, terminal-icons, z, PSFzf, PSReadLine, posh-git

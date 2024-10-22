@@ -1,7 +1,3 @@
-# Set git credentials with ENV
-git config --global user.email $env:GIT_USER_EMAIL
-git config --global user.name $env:GIT_USER_NAME
-
 # Invoke Starship
 Invoke-Expression (&starship init powershell)
 
