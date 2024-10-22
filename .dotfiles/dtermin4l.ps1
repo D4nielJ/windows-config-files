@@ -1,3 +1,10 @@
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$GitName,
+    [Parameter(Mandatory = $true)]
+    [string]$GitEmail
+)
+
 function installPackage {
     param(
         [Parameter(Mandatory = $true)]
@@ -55,8 +62,8 @@ $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";
 @"
 
 [user]
-    email = d4niel.djm@gmail.com
-    name = Daniel J
+    email = $GitEmail
+    name = $GitName
 [init]
     defaultBranch = main
 [alias]

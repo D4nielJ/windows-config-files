@@ -5,7 +5,10 @@
 #### !alpha dtermin4l script
 
 ```powershell
-irm https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1 | iex
+# Install latest powershell update
+winget install --id Microsoft.PowerShell --source winget
+# Re-open powershell and run the script
+irm https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1 | iex -User "YourName" -Mail "your.email@example.com"
 ```
 
 #### Install and set up: SpaceMono Nerd Font: https://www.nerdfonts.com/font-downloads
