@@ -61,7 +61,7 @@ winget install --id Microsoft.PowerShell --source winget
 
 #### Starship from: https://starship.rs/
 
-```
+```powershell
 choco install starship
 ```
 
@@ -69,13 +69,13 @@ choco install starship
 
 #### jq, curl, neovim, winfetch:
 
-```
+```powershell
 scoop install curl jq neovim winfetch
 ```
 
 #### Git for Windows:
 
-```
+```powershell
 # Install git:
 winget install -e --id Git.Git
 
@@ -96,7 +96,7 @@ winget install -e --id Git.Git
 
 #### Install modules posh-sshell, terminal-icons, z, PSFzf, PSReadLine, posh-git
 
-```
+```powershell
 Install-Module posh-sshell -Scope CurrentUser -Force
 Install-Module Terminal-Icons -Scope CurrentUser -Force
 Install-Module z -Scope CurrentUser -Force
@@ -108,7 +108,7 @@ Install-Module posh-git -Scope CurrentUser -Force
 
 #### Set up this repository and link config to $PROFILE
 
-```
+```powershell
 # Clone repo as bare
 git clone --bare https://github.com/D4nielJ/windows-config-files.git $HOME/.dotfiles
 Add-Content $PROFILE 'function dotfiles { git --git-dir=$HOME\.dotfiles --work-tree=$HOME @args }'
