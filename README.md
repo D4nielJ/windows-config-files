@@ -40,6 +40,12 @@ irm https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/ma
 
 #### Chocolatey from: https://chocolatey.org/install
 
+#### Starship from: https://starship.rs/
+
+```
+choco install starship
+```
+
 #### Scoop from: https://scoop.sh/
 
 #### jq, curl, neovim, winfetch:

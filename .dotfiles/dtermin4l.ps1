@@ -5,6 +5,22 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+function confirmCommandInstallation {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$command,
+        [Parameter(Mandatory = $true)]
+        [string]$packageName
+    )
+    if (Get-Command $command -ErrorAction SilentlyContinue) {
+        Write-Host "$packageName installed successfully!" -ForegroundColor Green
+    }
+    else {
+        Write-Host "Failed to install $packageName." -ForegroundColor Red
+        exit
+    }
+}
+
 # Set execution policy to bypass (for this process only)
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
@@ -15,13 +31,12 @@ $chocoScript = "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net
 Invoke-Expression $chocoScript > $null
 
 # Confirm Chocolatey installation
-if (Get-Command choco -ErrorAction SilentlyContinue) {
-    Write-Host "Chocolatey installed successfully!" -ForegroundColor Green
-}
-else {
-    Write-Host "Failed to install Chocolatey." -ForegroundColor Red
-    exit
-}
+confirmCommandInstallation -command "choco" -packageName "Chocolatey"
+
+#Install starship
+Write-Host "Installing starship..." -ForegroundColor Green
+$starshipScript = "choco install starship"
+Invoke-Expression $starshipScript > $null
 
 # Install scoop
 Write-Host "Installing Scoop..." -ForegroundColor Green
@@ -29,13 +44,7 @@ $scoopScript = "Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
 Invoke-Expression $scoopScript > $null
 
 # Confirm Scoop installation
-if (Get-Command scoop -ErrorAction SilentlyContinue) {
-    Write-Host "Scoop installed successfully!" -ForegroundColor Green
-}
-else {
-    Write-Host "Failed to install Scoop." -ForegroundColor Red
-    exit
-}
+confirmCommandInstallation -command "scoop" -packageName "Scoop"
 
 # Install scoop packages
 $packages = @("curl", "jq", "neovim", "winfetch")
@@ -43,5 +52,7 @@ foreach ($package in $packages) {
     Write-Host "Installing $package..." -ForegroundColor Green
     $scoopInstallPackage = "scoop install $package"
     Invoke-Expression $scoopInstallPackage > $null
-    Write-Host "$package installed successfully!" -ForegroundColor Green
+
+    # Confirm package installation
+    confirmCommandInstallation -command $package -packageName $package
 }
