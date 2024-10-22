@@ -13,6 +13,37 @@ function installPackage {
 # Set execution policy to bypass (for this process only)
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
+# Install SpaceMono Nerd font
+$fontUrl = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SpaceMono.zip"
+
+# Define the location to download the zip file
+$zipPath = "$env:TEMP\SpaceMono.zip"
+
+# Download the zip file
+Invoke-WebRequest -Uri $fontUrl -OutFile $zipPath
+
+# Define the extraction path
+$extractPath = "$env:TEMP\SpaceMono"
+
+# Create the extraction directory
+New-Item -ItemType Directory -Path $extractPath -Force
+
+# Extract the zip file
+Expand-Archive -Path $zipPath -DestinationPath $extractPath
+
+# Install the font
+Get-ChildItem -Path "$extractPath\*.ttf" | ForEach-Object {
+    $font = $_.FullName
+    $fontInstaller = New-Object -ComObject Shell.Application
+    $fontInstaller.Namespace('C:\Windows\Fonts').CopyHere($font)
+}
+
+# Clean up
+Remove-Item -Path $zipPath -Force
+Remove-Item -Path $extractPath -Recurse -Force
+
+Write-Host "SpaceMono Nerd Font installed successfully."
+
 # Install git:
 $gitScript = "winget install -e --id Git.Git"
 installPackage -script $gitScript -packageName "Git"
