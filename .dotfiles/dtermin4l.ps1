@@ -36,3 +36,12 @@ else {
     Write-Host "Failed to install Scoop." -ForegroundColor Red
     exit
 }
+
+# Install scoop packages
+$packages = @("curl", "jq", "neovim", "winfetch")
+foreach ($package in $packages) {
+    Write-Host "Installing $package..." -ForegroundColor Green
+    $scoopInstallPackage = "scoop install $package"
+    Invoke-Expression $scoopInstallPackage > $null
+    Write-Host "$package installed successfully!" -ForegroundColor Green
+}
