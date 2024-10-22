@@ -52,11 +52,14 @@ confirmCommandInstallation -command "choco" -packageName "Chocolatey"
 $scoopScript = "Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
 installPackage -script $scoopScript -packageName "Scoop"
 confirmCommandInstallation -command "scoop" -packageName "Scoop"
+scoop bucket add extras
 
 # Scoop Packages: extras/vcredist2022, curl, jq, neovim, winfetch
-$packages = @("extras/vcredist2022", "curl", "jq", "neovim", "winfetch, starship")
+$packages = @("vcredist2022", "curl", "jq", "neovim", "winfetch, starship")
 foreach ($package in $packages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
     confirmCommandInstallation -command $package -packageName $package
 }
+
+scoop uninstall vcredist2022
