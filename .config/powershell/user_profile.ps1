@@ -1,6 +1,3 @@
-# Invoke Starship
-Invoke-Expression (&starship init powershell)
-
 # Import necessary modules (only if they are needed)
 $modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf')
 
@@ -95,6 +92,9 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path $ChocolateyProfile) {
     Import-Module "$ChocolateyProfile"
 }
+
+# Invoke Starship
+Invoke-Expression (&starship init powershell)
 
 # Final message
 echo "You beautiful bean, PS is ready for your magic."
