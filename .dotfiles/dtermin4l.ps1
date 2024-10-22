@@ -46,18 +46,13 @@ $chocoScript = "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net
 installPackage -script $chocoScript -packageName "Chocolatey"
 confirmCommandInstallation -command "choco" -packageName "Chocolatey"
 
-# Starship
-$starshipScript = "choco install starship"
-installPackage -script $starshipScript -packageName "starship"
-Write-Host "Starship installed!" -ForegroundColor Green
-
 # Scoop
 $scoopScript = "Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
 installPackage -script $scoopScript -packageName "Scoop"
 confirmCommandInstallation -command "scoop" -packageName "Scoop"
 
 # Scoop Packages: curl, jq, neovim, winfetch
-$packages = @("curl", "jq", "neovim", "winfetch")
+$packages = @("curl", "jq", "neovim", "winfetch, starship")
 foreach ($package in $packages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
