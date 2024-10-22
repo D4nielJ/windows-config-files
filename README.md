@@ -2,6 +2,12 @@
 
 #### Install Powershell from Microsoft Store
 
+#### !alpha dtermin4l script
+
+```powershell
+irm https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1 | iex
+```
+
 #### Install and set up: SpaceMono Nerd Font: https://www.nerdfonts.com/font-downloads
 
 #### Add Dracula Theme to terminal `settings.json` file:

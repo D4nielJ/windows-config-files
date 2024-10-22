@@ -42,6 +42,7 @@ Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 Set-Alias idea idea64.exe
 Set-Alias sudo admin
+Set-Alias dt dotfiles
 
 # Utilities
 function which ($command) {
@@ -67,7 +68,8 @@ function touch {
     if (Test-Path $Path) {
         # Update the timestamp
         (Get-Item $Path).LastWriteTime = Get-Date
-    } else {
+    }
+    else {
         # Create a new empty file
         New-Item -Path $Path -ItemType File -ErrorAction SilentlyContinue
     }
