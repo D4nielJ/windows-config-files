@@ -73,12 +73,34 @@ installPackage -script $scoopScript -packageName "Scoop"
 confirmCommandInstallation -command "scoop" -packageName "Scoop"
 scoop bucket add extras
 
-# Scoop Packages: extras/vcredist2022, curl, jq, neovim, winfetch
-$packages = @("vcredist2022", "curl", "jq", "neovim", "winfetch, starship")
-foreach ($package in $packages) {
+# Scoop Packages: extras/vcredist2022, curl, jq, neovim, winfetch, fzf
+$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch, starship", "fzf")
+foreach ($package in $scoopPackages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
     confirmCommandInstallation -command $package -packageName $package
 }
 
 scoop uninstall vcredist2022
+
+# Powershell modules
+$powershellModules = @("posh-sshell", "Terminal-Icons", "z", "PSFzf", "PSReadLine", "posh-git")
+foreach ($module in $powershellModules) {
+    $powershellInstallModule = "Install-Module $module -Scope CurrentUser -Force"
+    installPackage -script $powershellInstallModule -packageName $module
+    confirmCommandInstallation -command $module -packageName $module
+}
+
+#Set up bare repository and dotfiles command
+git clone --bare https://github.com/D4nielJ/windows-config-files.git $HOME/.dotfiles
+Add-Content $PROFILE 'function dotfiles { git --git-dir=$HOME\.dotfiles --work-tree=$HOME @args }'
+
+# Load the updated profile to the current session
+. $PROFILE
+
+# Set up Git to ignore untracked files in your home directory
+#dotfiles checkout
+dotfiles config --local status.showUntrackedFiles no
+
+# Load powershell config to $PROFILE
+Add-Content $PROFILE '. $HOME\.config\powershell\user_profile.ps1'
