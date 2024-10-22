@@ -49,7 +49,9 @@ installPackage -script $chocoScript -packageName "Chocolatey"
 confirmCommandInstallation -command "choco" -packageName "Chocolatey"
 
 # Install git:
-winget install -e --id Git.Git
+$gitScript = "winget install -e --id Git.Git"
+installPackage -script $gitScript -packageName "Git"
+confirmCommandInstallation -command "git" -packageName "Git"
 
 # Add .gitconfig customization
 @"
