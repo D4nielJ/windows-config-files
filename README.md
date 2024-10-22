@@ -2,7 +2,11 @@
 
 #### Install Powershell from Microsoft Store
 
-#### !alpha dtermin4l script
+## **DTERMIN4L**
+
+Use this script to install all the configurations on this repo. Better used when is a fresh windows terminal that you plan to work on.
+
+**This could potentially delete files from your machine**
 
 ```powershell
 # Install latest powershell update
@@ -10,10 +14,15 @@ winget install --id Microsoft.PowerShell --source winget
 ```
 
 ```powershell
-# Re-open powershell and run the script
+# Re-open powershell and run the script. Make sure you replace name and email with yours.
 $scriptUrl = "https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1"
-irm $scriptUrl | iex -GitName "YourName" -GitEmail "your.email@example.com"
+$tempScriptPath = "$env:TEMP\dtermin4l.ps1"
+Invoke-WebRequest -Uri $scriptUrl -OutFile $tempScriptPath
+& $tempScriptPath -GitName "Daniel J" -GitEmail "d4niel.djm@gmail.com"
+Remove-Item -Path $tempScriptPath -Force
 ```
+
+## **Manual Configuration**
 
 #### Install and set up: SpaceMono Nerd Font: https://www.nerdfonts.com/font-downloads
 
@@ -105,6 +114,7 @@ Add-Content $PROFILE 'function dotfiles { git --git-dir=$HOME\.dotfiles --work-t
 . $PROFILE
 
 # Set up Git to ignore untracked files in your home directory
+Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Force
 dotfiles checkout
 dotfiles config --local status.showUntrackedFiles no
 
