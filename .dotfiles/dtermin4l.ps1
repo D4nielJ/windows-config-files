@@ -6,7 +6,8 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 $IS_LOGS = $true
-wsl touch ~/logs.txt
+$logFile = "$HOME\dtermin4l-logs.txt"
+New-Item -Path $logFile -ItemType File -Force
 
 function installPackage {
     param(
@@ -17,7 +18,7 @@ function installPackage {
     )
     Write-Host "Installing $packageName..." -ForegroundColor Green
     if ($IS_LOGS) {
-        Invoke-Expression $script | Out-File -FilePath "~\logs.txt"
+        Invoke-Expression $script | Out-File -FilePath $logFile -Append
     }
     else {
         Invoke-Expression $script > $null
@@ -52,8 +53,8 @@ $scoopScript = "Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
 installPackage -script $scoopScript -packageName "Scoop"
 confirmCommandInstallation -command "scoop" -packageName "Scoop"
 
-# Scoop Packages: curl, jq, neovim, winfetch
-$packages = @("curl", "jq", "neovim", "winfetch, starship")
+# Scoop Packages: extras/vcredist2022, curl, jq, neovim, winfetch
+$packages = @("extras/vcredist2022", "curl", "jq", "neovim", "winfetch, starship")
 foreach ($package in $packages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
