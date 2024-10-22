@@ -6,8 +6,6 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 $IS_LOGS = $true
-$logFile = "$HOME\dtermin4l-logs.txt"
-New-Item -Path $logFile -ItemType File -Force
 
 function installPackage {
     param(
@@ -18,7 +16,7 @@ function installPackage {
     )
     Write-Host "Installing $packageName..." -ForegroundColor Green
     if ($IS_LOGS) {
-        Invoke-Expression $script | Out-File -FilePath $logFile -Append
+        Invoke-Expression $script
     }
     else {
         Invoke-Expression $script > $null
