@@ -2,7 +2,7 @@
 Invoke-Expression (&starship init powershell)
 
 # Import necessary modules (only if they are needed)
-$modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf', 'posh-git')
+$modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf')
 
 foreach ($module in $modules) {
     if (Get-Module -ListAvailable -Name $module) {
@@ -84,6 +84,9 @@ function zzz {
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
     Invoke-Expression (New-Object Net.WebClient).DownloadString("https://zzz.rng.moe/scripts/get_signal_link_os.ps1")
 }
+
+# Import posh-git after aliases or they are not recognized
+Import-Module posh-git
 
 # Import the Chocolatey Profile for tab completion
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
