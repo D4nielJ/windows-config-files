@@ -109,9 +109,10 @@ Invoke-Expression $dotfilesFunction
 Add-Content $PROFILE $dotfilesFunction
 
 # Now that the dotfiles function is available, you can run the following commands:
-Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Force
 dotfiles checkout
 dotfiles config --local status.showUntrackedFiles no
 
 # Load powershell config to $PROFILE
 Add-Content $PROFILE '. $HOME\.config\powershell\user_profile.ps1'
+& $PROFILE
+Sync-TerminalSettings

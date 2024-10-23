@@ -1,3 +1,6 @@
+# Terminal Settings
+$env:TERMINAL_SETTINGS = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+
 # Import necessary modules (only if they are needed)
 $modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf')
 
@@ -70,6 +73,31 @@ function touch {
         # Create a new empty file
         New-Item -Path $Path -ItemType File -ErrorAction SilentlyContinue
     }
+}
+
+function Copy-FileContent {
+    param (
+        [string]$SourceFile,
+        [string]$TargetFile
+    )
+    
+    # Check if source file exists
+    if (-not (Test-Path $SourceFile)) {
+        Write-Host "Source file does not exist!" -ForegroundColor Red
+        return
+    }
+
+    # Clear the target file (or create it if it doesn't exist)
+    Clear-Content -Path $TargetFile
+
+    # Copy the content from source file to target file
+    Get-Content $SourceFile | Set-Content $TargetFile
+
+    Write-Host "Content copied from $SourceFile to $TargetFile successfully."
+}
+
+function Sync-TerminalSettings {
+    Copy-FileContent $HOME\.config\terminal\settings.json $env:TERMINAL_SETTINGS
 }
 
 # Random. DON'T READ.
