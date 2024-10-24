@@ -10,7 +10,7 @@ winget install --id Microsoft.PowerShell --source winget
 ```
 
 ```powershell
-# Re-open powershell and run the script. Make sure you replace name and email with yours.
+# Re-open powershell and run the script.
 $scriptUrl = "https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1"
 iex (irm $scriptUrl)
 ```
