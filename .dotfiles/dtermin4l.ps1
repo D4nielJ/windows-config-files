@@ -1,9 +1,5 @@
-param (
-    [Parameter(Mandatory = $true)]
-    [string]$GitName,
-    [Parameter(Mandatory = $true)]
-    [string]$GitEmail
-)
+$GitName = Read-Host -Prompt "Please enter the name you want to use for Git"
+$GitEmail = Read-Host -Prompt "Please enter the email you want to use for Git"
 
 function installPackage {
     param(

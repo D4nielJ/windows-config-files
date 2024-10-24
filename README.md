@@ -2,8 +2,7 @@
 
 This script automates the installation of essential tools, customizes your Git configuration, and sets up dotfiles management on a new machine or after formatting. It installs fonts, Git, Scoop, and several useful packages and PowerShell modules. It also updates your PowerShell profile to include environment variables and dotfiles commands.
 
-**This could potentially and will delete files from your machine**
-Make sure you have a back up of your terminal settings.json
+Make sure you have a back up of your terminal settings.json as it will be replaced by the settings from /.config/terminal/settings.json
 
 ```powershell
 # Install latest powershell update
@@ -13,10 +12,7 @@ winget install --id Microsoft.PowerShell --source winget
 ```powershell
 # Re-open powershell and run the script. Make sure you replace name and email with yours.
 $scriptUrl = "https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1"
-$tempScriptPath = "$env:TEMP\dtermin4l.ps1"
-Invoke-WebRequest -Uri $scriptUrl -OutFile $tempScriptPath
-& $tempScriptPath -GitName "Daniel J" -GitEmail "d4niel.djm@gmail.com"
-Remove-Item -Path $tempScriptPath -Force
+iex (irm $scriptUrl)
 ```
 
 ## **Manual Configuration**
