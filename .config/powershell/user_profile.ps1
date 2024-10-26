@@ -41,8 +41,10 @@ Set-Alias grep findstr
 Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 Set-Alias idea idea64.exe
-Set-Alias sudo admin
 Set-Alias dt dotfiles
+Set-Alias pn pnpm
+Set-Alias dn deno
+
 
 # Utilities
 function which ($command) {
@@ -50,12 +52,8 @@ function which ($command) {
     Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
-function .. { cd .. }
-function ... { cd ..; cd .. }
-
-function admin {
-    Start-Process wt -Verb RunAs
-}
+function .. { cd ..; }
+function ... { cd ..; cd ..; }
 
 function psconfig {
     code "$env:USERPROFILE\.config\powershell\user_profile.ps1"
@@ -73,6 +71,10 @@ function touch {
         # Create a new empty file
         New-Item -Path $Path -ItemType File -ErrorAction SilentlyContinue
     }
+}
+
+function admin {
+    Start-Process wt -Verb RunAs
 }
 
 function Copy-FileContent {
@@ -100,6 +102,36 @@ function Sync-TerminalSettings {
     Copy-FileContent $HOME\.config\terminal\settings.json $env:TERMINAL_SETTINGS
 }
 
+function rld {
+    @(
+        $Profile.AllUsersAllHosts,
+        $Profile.AllUsersCurrentHost,
+        $Profile.CurrentUserAllHosts,
+        $Profile.CurrentUserCurrentHost
+    ) | % {
+        if (Test-Path $_) {
+            Write-Verbose "Running $_"
+            . $_
+        }
+    }
+}
+
+function take {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$dirName
+    )
+
+    # Check if directory already exists
+    if (!(Test-Path -Path $dirName)) {
+        # Create the directory
+        New-Item -Path $dirName -ItemType Directory | Out-Null
+    }
+
+    # Navigate into the directory
+    Set-Location -Path $dirName
+}
+
 # Random. DON'T READ.
 function genshin {
     Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -120,9 +152,11 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path $ChocolateyProfile) {
     Import-Module "$ChocolateyProfile"
 }
+# Load Deno completions
+& $HOME\.config\deno\deno.ps1
 
 # Invoke Starship
 Invoke-Expression (&starship init powershell)
 
 # Final message
-echo "You beautiful bean, PS is ready for your magic."
+echo "~ Okaaaaaaaaay, let's go"
