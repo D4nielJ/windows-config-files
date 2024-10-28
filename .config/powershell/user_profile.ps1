@@ -32,6 +32,9 @@ function lg { & git log --pretty=format:"%C(auto)%h %C(yellow)%d %C(reset)%s %C(
 function gam {
     & git add .; & git commit -m $args
 }
+function dlx { 
+    & pn dlx $args
+}
 
 # Alias for commands
 Set-Alias vim nvim
@@ -44,7 +47,6 @@ Set-Alias idea idea64.exe
 Set-Alias dt dotfiles
 Set-Alias pn pnpm
 Set-Alias dn deno
-
 
 # Utilities
 function which ($command) {
