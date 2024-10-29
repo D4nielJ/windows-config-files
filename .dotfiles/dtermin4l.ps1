@@ -73,14 +73,18 @@ $scoopScript = "Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
 installPackage -script $scoopScript -packageName "Scoop"
 scoop bucket add extras
 
-# Scoop Packages: extras/vcredist2022, curl, jq, neovim, winfetch, fzf
-$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch, starship", "fzf")
+# Scoop Packages:
+$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch, starship", "fzf", "deno", "pnpm", "nvm")
 foreach ($package in $scoopPackages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
 }
 
 scoop uninstall vcredist2022
+
+# Set up node:
+$nodeScript = "nvm install lts; nvm use lts;"
+installPackage -script $nodeScript -packageName "node"
 
 # Powershell modules
 $powershellModules = @("posh-sshell", "Terminal-Icons", "z", "PSFzf", "PSReadLine", "posh-git")
