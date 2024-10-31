@@ -45,7 +45,7 @@ function gam {
 function stash { git stash $args }
 function pop { git stash pop $args }
 function gpob { git pull origin $(git branch --show-current) }
-function gpub { git push origin $(git branch --show-current) }
+function gpub { git push --set-upstream origin $(git branch --show-current) }
 function rebase { git rebase $args }
 function reset { git reset $args }
 function branch { git branch $args }
