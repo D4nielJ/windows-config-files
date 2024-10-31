@@ -73,6 +73,7 @@ Set-Alias idea idea64.exe
 Set-Alias dt dotfiles
 Set-Alias pn pnpm
 Set-Alias dn deno
+Set-Alias code cursor
 
 # Utilities
 function which ($command) {
@@ -84,7 +85,7 @@ function .. { cd ..; }
 function ... { cd ..; cd ..; }
 
 function psconfig {
-    code "$env:USERPROFILE\.config\powershell\user_profile.ps1"
+    cursor "$env:USERPROFILE\.config\powershell\user_profile.ps1"
 }
 
 function touch {
@@ -184,11 +185,32 @@ function take {
     Set-Location -Path $dirName
 }
 
+# Usage:
+# Kill-Port 3000
+# Kill-Port 3000,3001,3002
+function Kill-Port {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int[]]$Ports
+    )
+    
+    foreach ($port in $Ports) {
+        $process = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+        if ($process) {
+            Stop-Process -Id $process.OwningProcess -Force
+            Write-Host "Killed process using port $port"
+        }
+        else {
+            Write-Host "No process found using port $port"
+        }
+    }
+}
+
 # Random. DON'T READ.
 function genshin {
     Set-ExecutionPolicy Bypass -Scope Process -Force
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-    iex "&{$((New-Object System.Net.WebClient).DownloadString('https://gist.github.com/MadeBaruna/1d75c1d37d19eca71591ec8a31178235/raw/getlink.ps1'))} global"
+    Invoke-Expression "&{$((New-Object System.Net.WebClient).DownloadString('https://gist.github.com/MadeBaruna/1d75c1d37d19eca71591ec8a31178235/raw/getlink.ps1'))} global"
 }
 
 function zzz {
@@ -213,4 +235,4 @@ if (Test-Path $ChocolateyProfile) {
 Invoke-Expression (&starship init powershell)
 
 # Final message
-echo "~ Okaaaaaaaaay, let's go"
+Write-Output "~ Okaaaaaaaaay, let's go"
