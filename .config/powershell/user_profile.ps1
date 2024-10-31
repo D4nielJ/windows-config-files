@@ -51,6 +51,7 @@ function reset { git reset $args }
 function branch { git branch $args }
 function gbd { git branch -d $args }
 function gcp { git cherry-pick $args }
+function dif { & git diff $args }
 
 function dlx { 
     & pn dlx $args
