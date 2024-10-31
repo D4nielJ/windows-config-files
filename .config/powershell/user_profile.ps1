@@ -5,8 +5,13 @@ $env:TERMINAL_SETTINGS = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8
 $modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf')
 
 foreach ($module in $modules) {
-    if (Get-Module -ListAvailable -Name $module) {
-        Import-Module $module
+    try {
+        if (Get-Module -ListAvailable -Name $module) {
+            Import-Module $module -ErrorAction Stop
+        }
+    }
+    catch {
+        Write-Warning "Failed to import module $module : $_"
     }
 }
 
@@ -31,11 +36,32 @@ function gcm { & git commit $args }
 function log { & git log }
 function lg { & git log --pretty=format:"%C(auto)%h %C(yellow)%d %C(reset)%s %C(bold blue)<%an>%C(reset)" --graph }
 function gam {
-    & git add .; & git commit -m $args
+    param([Parameter(Mandatory = $true)][string]$message)
+    git add .
+    if ($?) {
+        git commit -m $message
+    }
 }
+function stash { git stash $args }
+function pop { git stash pop $args }
+function gpob { git pull origin $(git branch --show-current) }
+function gpub { git push origin $(git branch --show-current) }
+function rebase { git rebase $args }
+function reset { git reset $args }
+function branch { git branch $args }
+function gbd { git branch -d $args }
+function gcp { git cherry-pick $args }
+
 function dlx { 
     & pn dlx $args
 }
+
+# Quick directory shortcuts
+function pr { Set-Location ~/projects }
+function docs { Set-Location ~/Documents }
+function dl { Set-Location ~/Downloads }
+function cfg { Set-Location ~/.config }
+function ~ { Set-Location ~ }
 
 # Alias for commands
 Set-Alias vim nvim
@@ -64,15 +90,24 @@ function psconfig {
 
 function touch {
     param (
-        [string]$Path
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string[]]$Paths
     )
-    if (Test-Path $Path) {
-        # Update the timestamp
-        (Get-Item $Path).LastWriteTime = Get-Date
-    }
-    else {
-        # Create a new empty file
-        New-Item -Path $Path -ItemType File -ErrorAction SilentlyContinue
+    
+    process {
+        foreach ($Path in $Paths) {
+            try {
+                if (Test-Path -LiteralPath $Path) {
+                    (Get-Item -LiteralPath $Path).LastWriteTime = Get-Date
+                }
+                else {
+                    New-Item -Path $Path -ItemType File -Force
+                }
+            }
+            catch {
+                Write-Error "Failed to touch $Path`: $_"
+            }
+        }
     }
 }
 
@@ -82,23 +117,33 @@ function admin {
 
 function Copy-FileContent {
     param (
-        [string]$SourceFile,
-        [string]$TargetFile
+        [Parameter(Mandatory = $true)][string]$SourceFile,
+        [Parameter(Mandatory = $true)][string]$TargetFile
     )
     
-    # Check if source file exists
-    if (-not (Test-Path $SourceFile)) {
-        Write-Host "Source file does not exist!" -ForegroundColor Red
+    # Resolve full paths
+    $SourceFile = Resolve-Path $SourceFile -ErrorAction SilentlyContinue
+    $TargetFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetFile)
+    
+    if (-not $SourceFile) {
+        Write-Error "Source file does not exist!"
         return
     }
 
-    # Clear the target file (or create it if it doesn't exist)
-    Clear-Content -Path $TargetFile
+    try {
+        # Create directory for target file if it doesn't exist
+        $targetDir = Split-Path -Parent $TargetFile
+        if (-not (Test-Path $targetDir)) {
+            New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+        }
 
-    # Copy the content from source file to target file
-    Get-Content $SourceFile | Set-Content $TargetFile
-
-    Write-Host "Content copied from $SourceFile to $TargetFile successfully."
+        # Copy content
+        Get-Content $SourceFile | Set-Content $TargetFile -ErrorAction Stop
+        Write-Host "Content copied successfully." -ForegroundColor Green
+    }
+    catch {
+        Write-Error "Failed to copy content: $_"
+    }
 }
 
 function Sync-TerminalSettings {
@@ -106,19 +151,24 @@ function Sync-TerminalSettings {
 }
 
 function rld {
-    @(
-        $Profile.AllUsersAllHosts,
+    $reloaded = 0
+    @($Profile.AllUsersAllHosts,
         $Profile.AllUsersCurrentHost,
         $Profile.CurrentUserAllHosts,
-        $Profile.CurrentUserCurrentHost
-    ) | % {
+        $Profile.CurrentUserCurrentHost) | ForEach-Object {
         if (Test-Path $_) {
-            Write-Verbose "Running $_"
-            . $_
+            try {
+                . $_
+                $reloaded++
+                Write-Host "Reloaded: $_" -ForegroundColor Green
+            }
+            catch {
+                Write-Error "Failed to reload $_`: $_"
+            }
         }
     }
+    Write-Host "Reloaded $reloaded profile(s)" -ForegroundColor Cyan
 }
-
 function take {
     param (
         [Parameter(Mandatory = $true)]
@@ -146,6 +196,8 @@ function zzz {
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
     Invoke-Expression (New-Object Net.WebClient).DownloadString("https://zzz.rng.moe/scripts/get_signal_link_os.ps1")
 }
+
+##################################################################################################################
 
 # Import posh-git after aliases or they are not recognized
 Import-Module posh-git
