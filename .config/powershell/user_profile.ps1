@@ -22,6 +22,7 @@ function fetch { & git fetch $args }
 function clone { & git clone $args }
 function pull { & git pull $args }
 function push { & git push $args }
+function merge { & git merge $args }
 function add { & git add $args }
 function gco { & git checkout $args }
 function gcob { & git checkout -b $args }
