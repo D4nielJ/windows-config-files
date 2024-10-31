@@ -9,8 +9,15 @@ function installPackage {
         [string]$packageName
     )
     Write-Host "Installing $packageName..." -ForegroundColor Green
-
-    Invoke-Expression $script
+    
+    # Should be:
+    try {
+        Invoke-Expression $script
+        Write-Host "$packageName installed successfully" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "Failed to install $packageName`: $($_.Exception.Message)" -ForegroundColor Red
+    }
 }
 
 # Set execution policy to bypass (for this process only)
@@ -74,7 +81,7 @@ installPackage -script $scoopScript -packageName "Scoop"
 scoop bucket add extras
 
 # Scoop Packages:
-$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch, starship", "fzf", "deno", "pnpm", "nvm")
+$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch", "starship", "fzf", "deno", "pnpm", "nvm")
 foreach ($package in $scoopPackages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
