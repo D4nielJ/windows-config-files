@@ -27,6 +27,7 @@ function fetch { & git fetch $args }
 function clone { & git clone $args }
 function pull { & git pull $args }
 function push { & git push $args }
+function merge { & git merge $args }
 function add { & git add $args }
 function gco { & git checkout $args }
 function gcob { & git checkout -b $args }
@@ -44,12 +45,13 @@ function gam {
 function stash { git stash $args }
 function pop { git stash pop $args }
 function gpob { git pull origin $(git branch --show-current) }
-function gpub { git push origin $(git branch --show-current) }
+function gpub { git push --set-upstream origin $(git branch --show-current) }
 function rebase { git rebase $args }
 function reset { git reset $args }
 function branch { git branch $args }
 function gbd { git branch -d $args }
 function gcp { git cherry-pick $args }
+function dif { & git diff $args }
 
 function dlx { 
     & pn dlx $args
