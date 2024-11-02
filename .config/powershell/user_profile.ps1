@@ -76,6 +76,7 @@ Set-Alias dt dotfiles
 Set-Alias pn pnpm
 Set-Alias dn deno
 Set-Alias code cursor
+Set-Alias prettier-init Initialize-Prettier
 
 # Utilities
 function which ($command) {
@@ -188,9 +189,9 @@ function take {
 }
 
 # Usage:
-# Kill-Port 3000
-# Kill-Port 3000,3001,3002
-function Kill-Port {
+# Stop-Port 3000
+# Stop-Port 3000,3001,3002
+function Stop-Port {
     param(
         [Parameter(Mandatory = $true)]
         [int[]]$Ports
@@ -206,6 +207,12 @@ function Kill-Port {
             Write-Host "No process found using port $port"
         }
     }
+}
+
+# Initialize .prettierrc in current directory
+function Initialize-Prettier {
+    touch .prettierrc.json
+    Copy-FileContent $HOME\.config\prettier\.prettierrc.json .prettierrc.json
 }
 
 # Random. DON'T READ.

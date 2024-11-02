@@ -1,8 +1,17 @@
-## **DTERMIN4L**
+# DTERMIN4L
 
-This script automates the installation of essential tools, customizes your Git configuration, and sets up dotfiles management on a new machine or after formatting. It installs fonts, Git, Scoop, and several useful packages and PowerShell modules. It also updates your PowerShell profile to include environment variables and dotfiles commands.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![PowerShell](https://img.shields.io/badge/PowerShell-%235391FE.svg?style=flat&logo=powershell&logoColor=white)
 
-Make sure you have a back up of your terminal settings.json as it will be replaced by the settings from /.config/terminal/settings.json
+A powerful Windows terminal configuration script that automates the setup of your development environment. This is a highly opinionated script that will install all the tools I use on a daily basis during development on windows. You can customize it to your liking by editing the script or take it as a starting point to build your own.
+
+## Prerequisites
+
+- Windows 10/11
+- PowerShell 7+ (Windows PowerShell 5.1 is not supported)
+- Internet connection
+
+## Installation
 
 ```powershell
 # Install latest powershell update
@@ -13,117 +22,97 @@ winget install --id Microsoft.PowerShell --source winget
 # Re-open powershell and run the script.
 $scriptUrl = "https://raw.githubusercontent.com/D4nielJ/windows-config-files/refs/heads/main/.dotfiles/dtermin4l.ps1"
 iex (irm $scriptUrl)
+
+# Reset the terminal once more and run
+Sync-TerminalSettings
 ```
 
-## **Manual Configuration**
+> ⚠️ **Note**: Make sure to backup your existing terminal settings.json as it will be replaced by the settings from /.config/terminal/settings.json
 
-#### Install latest update of Powershell:
+## 🛠️ Post-Installation Usage
+
+### Dotfiles Management
+
+After installation, you can manage your dotfiles using the `dt` alias (shorthand for `dotfiles`):
 
 ```powershell
-winget install --id Microsoft.PowerShell --source winget
+dt status              # Check status of your dotfiles
+dt add route/to/file   # Add files you want to track
+dt commit -m "message" # Commit changes
+dt push               # Push changes to remote
+dt pull               # Pull latest changes
 ```
 
-#### Install and set up: SpaceMono Nerd Font: https://www.nerdfonts.com/font-downloads
+> ⚠️ **Warning**: Never use `dt add .` in your home directory! Since this is a bare repository, it will try to track all files in your home directory. Instead, explicitly add the files you want to track: `dt add ~/.config/specific-file`
 
-#### Add Dracula Theme to terminal `settings.json` file:
+### Useful Aliases & Functions
 
-```json
-{
-  "name": "Dracula",
-  "cursorColor": "#F8F8F2",
-  "selectionBackground": "#44475A",
-  "background": "#282A36",
-  "foreground": "#F8F8F2",
-  "black": "#21222C",
-  "blue": "#BD93F9",
-  "cyan": "#8BE9FD",
-  "green": "#50FA7B",
-  "purple": "#FF79C6",
-  "red": "#FF5555",
-  "white": "#F8F8F2",
-  "yellow": "#F1FA8C",
-  "brightBlack": "#6272A4",
-  "brightBlue": "#D6ACFF",
-  "brightCyan": "#A4FFFF",
-  "brightGreen": "#69FF94",
-  "brightPurple": "#FF92DF",
-  "brightRed": "#FF6E6E",
-  "brightWhite": "#FFFFFF",
-  "brightYellow": "#FFFFA5"
-}
-```
+#### Git Shortcuts
 
-#### Chocolatey from: https://chocolatey.org/install
+- `g` - Alias for `git`
+- `gam "message"` - Add all changes and commit with message
+- `gpob` - Pull from origin of current branch
+- `gpub` - Push to origin and set upstream for current branch
+- `lg` - Pretty git log with graph
+- `stat` - Git status
+- `branch` - Git branch management
+- `gbd` - Delete git branch
 
-#### Starship from: https://starship.rs/
+#### Navigation
 
-```powershell
-choco install starship
-```
+- `pr` - Navigate to ~/projects
+- `docs` - Navigate to ~/Documents
+- `cfg` - Navigate to ~/.config
+- `~` - Navigate to home directory
+- `..` - Go up one directory
+- `...` - Go up two directories
+- `take dirname` - Create and enter directory
 
-#### Scoop from: https://scoop.sh/
+#### Terminal Management
 
-#### jq, curl, neovim, winfetch:
+- `admin` - Open new terminal with admin privileges
+- `. rld` - Reload PowerShell profile
+- `psconfig` - Edit PowerShell configuration
+- `Sync-TerminalSettings` - Sync the terminal settings.json from /config/terminal/settings.json to the local Windows Terminal settings.json
 
-```powershell
-scoop install curl jq neovim winfetch
-```
+#### Development Tools
 
-#### Git for Windows:
+- `vim` - Opens Neovim
+- `code` - Opens Cursor (VS Code alternative)
+- `pn` - Alias for pnpm
+- `dn` - Alias for deno
+- `prettier-init` - Initialize .prettierrc in current directory
+- `Stop-Port 3000` - Kill process using specified port
 
-```powershell
-# Install git:
-winget install -e --id Git.Git
+### 🔗 Installed Tools Reference
 
-# Add .gitconfig customization
-@"
+#### Package Managers
 
-[user]
-    email = d4niel.djm@gmail.com
-    name = Daniel J
-[init]
-    defaultBranch = main
-[alias]
-    lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
-    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-    lg = lg1
-"@ | Add-Content -Path $HOME\.gitconfig
-```
+- [Scoop](https://scoop.sh/) - Command-line installer
+- [pnpm](https://pnpm.io/) - Fast, disk space efficient package manager
 
-#### Install modules posh-sshell, terminal-icons, z, PSFzf, PSReadLine, posh-git
+#### Terminal Tools
 
-```powershell
-Install-Module posh-sshell -Scope CurrentUser -Force
-Install-Module Terminal-Icons -Scope CurrentUser -Force
-Install-Module z -Scope CurrentUser -Force
-scoop install fzf
-Install-Module PSFzf -Scope CurrentUser -Force
-Install-Module -Name PSReadLine -Scope CurrentUser -Force
-Install-Module posh-git -Scope CurrentUser -Force
-```
+- [Starship](https://starship.rs/) - Cross-shell prompt
+- [Neovim](https://neovim.io/) - Hyperextensible Vim-based text editor
+- [Windows Terminal](https://github.com/microsoft/terminal) - Modern terminal for Windows
+- [PSReadLine](https://github.com/PowerShell/PSReadLine) - Command line editing in PowerShell
+- [Terminal-Icons](https://github.com/devblackops/Terminal-Icons) - File and folder icons
+- [PSFzf](https://github.com/kelleyma49/PSFzf) - Fuzzy finder integration
 
-#### Set up this repository and link config to $PROFILE
+#### Git Tools
 
-```powershell
-# Clone repo as bare
-git clone --bare https://github.com/D4nielJ/windows-config-files.git $HOME/.dotfiles
-Add-Content $PROFILE 'function dotfiles { git --git-dir=$HOME\.dotfiles --work-tree=$HOME @args }'
+- [Git for Windows](https://gitforwindows.org/)
+- [posh-git](https://github.com/dahlbyk/posh-git) - Git integration for PowerShell
+- [tig](https://github.com/jonas/tig) - Text-mode interface for Git
 
-# Load the updated profile to the current session
-. $PROFILE
+#### Additional Utilities
 
-# Set up Git to ignore untracked files in your home directory
-Remove-Item -Path "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Force
-dotfiles checkout
-dotfiles config --local status.showUntrackedFiles no
-
-# Load powershell config to $PROFILE
-Add-Content $PROFILE '. $HOME\.config\powershell\user_profile.ps1'
-```
-
-#### Install Node, pnpm or deno or whatever.
-
-You're on your own from this point.
+- [fzf](https://github.com/junegunn/fzf) - Command-line fuzzy finder
+- [z](https://github.com/rupa/z) - Directory jumper
+- [curl](https://curl.se/) - Command line tool for transferring data
+- [jq](https://stedolan.github.io/jq/) - Command-line JSON processor
+- [winfetch](https://github.com/lptstr/winfetch) - System information tool
 
 #### License
 
