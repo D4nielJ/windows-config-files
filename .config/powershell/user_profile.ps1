@@ -6,8 +6,14 @@ $modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf')
 
 foreach ($module in $modules) {
     try {
-        if (Get-Module -ListAvailable -Name $module) {
-            Import-Module $module -ErrorAction Stop
+        if (!(Get-Module -Name $module)) {
+            # Check if module is not already loaded
+            if (Get-Module -ListAvailable -Name $module) {
+                Import-Module $module -ErrorAction Stop
+            }
+            else {
+                Write-Warning "Module $module is not installed. Install it using: Install-Module $module -Scope CurrentUser"
+            }
         }
     }
     catch {
@@ -163,15 +169,14 @@ function rld {
             try {
                 . $_
                 $reloaded++
-                Write-Host "Reloaded: $_" -ForegroundColor Green
             }
             catch {
                 Write-Error "Failed to reload $_`: $_"
             }
         }
     }
-    Write-Host "Reloaded $reloaded profile(s)" -ForegroundColor Cyan
 }
+
 function take {
     param (
         [Parameter(Mandatory = $true)]
