@@ -81,7 +81,7 @@ installPackage -script $scoopScript -packageName "Scoop"
 scoop bucket add extras
 
 # Scoop Packages:
-$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch", "starship", "fzf", "deno", "pnpm", "nvm")
+$scoopPackages = @("vcredist2022", "curl", "jq", "neovim", "winfetch", "starship", "fzf", "deno", "pnpm", "nvm", "terminal-icons")
 foreach ($package in $scoopPackages) {
     $scoopInstallPackage = "scoop install $package"
     installPackage -script $scoopInstallPackage -packageName $package
@@ -94,7 +94,7 @@ $nodeScript = "nvm install lts; nvm use lts;"
 installPackage -script $nodeScript -packageName "node"
 
 # Powershell modules
-$powershellModules = @("posh-sshell", "Terminal-Icons", "z", "PSFzf", "PSReadLine", "posh-git")
+$powershellModules = @("posh-sshell", "z", "PSFzf", "PSReadLine", "posh-git")
 foreach ($module in $powershellModules) {
     $powershellInstallModule = "Install-Module $module -Scope CurrentUser -Force"
     installPackage -script $powershellInstallModule -packageName $module
