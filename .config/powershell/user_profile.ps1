@@ -65,6 +65,7 @@ function dlx {
 
 # Quick directory shortcuts
 function pr { Set-Location ~/projects }
+function dev { Set-Location ~/dev }
 function docs { Set-Location ~/Documents }
 function dl { Set-Location ~/Downloads }
 function cfg { Set-Location ~/.config }
