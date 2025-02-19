@@ -2,7 +2,7 @@
 $env:TERMINAL_SETTINGS = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 
 # Import necessary modules (only if they are needed)
-$modules = @('posh-sshell', 'Terminal-Icons', 'z', 'PSFzf')
+$modules = @('posh-sshell', 'z', 'PSFzf')
 
 foreach ($module in $modules) {
     try {
@@ -81,8 +81,8 @@ Set-Alias idea idea64.exe
 Set-Alias dt dotfiles
 Set-Alias pn pnpm
 Set-Alias dn deno
-Set-Alias code cursor
 Set-Alias prettier-init Initialize-Prettier
+Set-Alias pp open-profile
 
 # Utilities
 function which ($command) {
@@ -93,8 +93,8 @@ function which ($command) {
 function .. { cd ..; }
 function ... { cd ..; cd ..; }
 
-function psconfig {
-    cursor "$env:USERPROFILE\.config\powershell\user_profile.ps1"
+function open-profile {
+    code "$env:USERPROFILE\.config\powershell\user_profile.ps1"
 }
 
 function touch {
@@ -220,6 +220,46 @@ function Initialize-Prettier {
     Copy-FileContent $HOME\.config\prettier\.prettierrc.json .prettierrc.json
 }
 
+function Update-Modules {
+    [CmdletBinding()]
+    param(
+        [switch]$Force
+    )
+
+    $modules = Get-InstalledModule
+    $count = $modules.Count
+    $updated = 0
+    $failed = 0
+
+    if ($count -eq 0) {
+        Write-Host "No modules found to update." -ForegroundColor Yellow
+        return
+    }
+
+    Write-Host "Updating $count modules..." -ForegroundColor Cyan
+
+    foreach ($module in $modules) {
+        try {
+            Write-Host "Updating $($module.Name) (v$($module.Version))..." -NoNewline
+            Update-Module -Name $module.Name -Force:$Force -ErrorAction Stop
+            $updated++
+            Write-Host " ✓" -ForegroundColor Green
+        }
+        catch {
+            $failed++
+            Write-Host " ✗" -ForegroundColor Red
+            Write-Warning "Failed to update $($module.Name): $_"
+        }
+    }
+
+    Write-Host "`nUpdate complete:" -ForegroundColor Cyan
+    Write-Host "  - Successfully updated: $updated" -ForegroundColor Green
+    Write-Host "  - Failed to update: $failed" -ForegroundColor Red
+    if ($failed -gt 0) {
+        Write-Host "`nTip: Try running with -Force flag to force updates on failed modules." -ForegroundColor Yellow
+    }
+}
+
 # Random. DON'T READ.
 function genshin {
     Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -228,8 +268,7 @@ function genshin {
 }
 
 function zzz {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
-    Invoke-Expression (New-Object Net.WebClient).DownloadString("https://zzz.rng.moe/scripts/get_signal_link_os.ps1")
+    iwr -useb stardb.gg/signal | iex
 }
 
 ##################################################################################################################
