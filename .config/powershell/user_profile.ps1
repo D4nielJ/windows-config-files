@@ -84,6 +84,8 @@ Set-Alias pn pnpm
 Set-Alias dn deno
 Set-Alias prettier-init Initialize-Prettier
 Set-Alias pp open-profile
+Set-Alias wtop Save-Wter
+Set-Alias ptow Import-Wter
 
 # Utilities
 function which ($command) {
@@ -259,6 +261,14 @@ function Update-Modules {
     if ($failed -gt 0) {
         Write-Host "`nTip: Try running with -Force flag to force updates on failed modules." -ForegroundColor Yellow
     }
+}
+
+function Save-Wter {
+    deno run --allow-env --allow-read --allow-write --allow-sys jsr:@d4nielj/wtermin4l@0.0.4 wtop    
+}
+
+function Import-Wter {
+    deno run --allow-env --allow-read --allow-write --allow-sys jsr:@d4nielj/wtermin4l@0.0.4 wtop    
 }
 
 # Random. DON'T READ.
