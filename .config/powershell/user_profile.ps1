@@ -1,33 +1,6 @@
 # Terminal Settings
 $env:TERMINAL_SETTINGS = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 
-# Import necessary modules (only if they are needed)
-$modules = @('posh-sshell', 'z', 'PSFzf')
-
-foreach ($module in $modules) {
-    try {
-        if (!(Get-Module -Name $module)) {
-            # Check if module is not already loaded
-            if (Get-Module -ListAvailable -Name $module) {
-                Import-Module $module -ErrorAction Stop
-            }
-            else {
-                Write-Warning "Module $module is not installed. Install it using: Install-Module $module -Scope CurrentUser"
-            }
-        }
-    }
-    catch {
-        Write-Warning "Failed to import module $module : $_"
-    }
-}
-
-# PSReadLine settings
-Set-PSReadLineOption -EditMode Emacs -BellStyle None -PredictionSource History -PredictionViewStyle ListView
-Set-PSReadLineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
-
-# Fzf options
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+f' -PSReadlineChordReverseHistory 'Ctrl+r'
-
 # Git alias functions
 function fetch { & git fetch $args }
 function clone { & git clone $args }
@@ -273,25 +246,35 @@ function genshin {
     Invoke-Expression "&{$((New-Object System.Net.WebClient).DownloadString('https://gist.github.com/MadeBaruna/1d75c1d37d19eca71591ec8a31178235/raw/getlink.ps1'))} global"
 }
 
-function zzz {
-    iwr -useb stardb.gg/signal | iex
-}
-
 ##################################################################################################################
 
 # Import posh-git after aliases or they are not recognized
-Import-Module posh-git
+# Import necessary modules (only if they are needed)
+$null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCount 1 -Action {
+    Import-Module posh-sshell, PSFzf, posh-git -ErrorAction SilentlyContinue
+    & $HOME\.config\deno\deno.ps1
+    Invoke-Expression (& {zoxide init powershell | Out-String})
+
+    # PSReadLine settings
+    Set-PSReadLineOption -EditMode Emacs -BellStyle None -PredictionSource History -PredictionViewStyle ListView
+    Set-PSReadLineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
+
+    # Fzf options
+    Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+f' -PSReadlineChordReverseHistory 'Ctrl+r'
+}
+
+# Invoke starship
+if (Test-Path "$HOME\.starship-init.ps1") {
+    . "$HOME\.starship-init.ps1"
+} else {
+    # Fallback in case the file is missing
+    Invoke-Expression (&starship init powershell)
+}
 
 # Import the Chocolatey Profile for tab completion
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path $ChocolateyProfile) {
-    Import-Module "$ChocolateyProfile"
+if ($env:ChocolateyInstall) {
+    Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1" -ErrorAction SilentlyContinue
 }
-# Load Deno completions
-& $HOME\.config\deno\deno.ps1
-
-# Invoke Starship
-Invoke-Expression (&starship init powershell)
 
 # Final message
 Write-Output "~ Okaaaaaaaaay, let's go"
