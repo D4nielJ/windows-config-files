@@ -59,6 +59,14 @@ Set-Alias prettier-init Initialize-Prettier
 Set-Alias pp open-profile
 Set-Alias wt wtermin4l
 
+# Eza
+Remove-Item Alias:ll -ErrorAction SilentlyContinue
+
+# Use eza with icons and grid format
+function ll { eza --icons --long --git $args }
+function la { eza --icons --all --group-directories-first --long $args }
+function ls { eza --icons $args }
+
 # Utilities
 function which ($command) {
     Get-Command -Name $command -ErrorAction SilentlyContinue | 
@@ -252,6 +260,7 @@ function genshin {
 # Import necessary modules (only if they are needed)
 $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCount 1 -Action {
     Import-Module posh-sshell, PSFzf, posh-git -ErrorAction SilentlyContinue
+    Import-Module -Name Terminal-Icons
     & $HOME\.config\deno\deno.ps1
     Invoke-Expression (& {zoxide init powershell | Out-String})
 
